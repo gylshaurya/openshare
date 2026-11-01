@@ -36,7 +36,7 @@ export default function TradePage() {
   const a = s.assets.find((x) => x.assetId === (assetId ?? s.assets[0]?.assetId))!;
   const key = poolKeyFor(a.token, d.usdt, d.hook);
   const usdtIs0 = key.currency0.toLowerCase() === d.usdt.toLowerCase();
-  const prem = a.poolPriceUsd6 && a.priceUsd6 ? (Number(a.poolPriceUsd6) / Number(a.priceUsd6) - 1) * 100 : undefined;
+  const prem = a.poolPriceUsd6 && a.priceUsd6 ? Math.round((Number(a.poolPriceUsd6) / Number(a.priceUsd6) - 1) * 10_000) / 100 || 0 : undefined;
   const feeReason = a.stale ? "oracle stale" : s.marketOpen ? "NSE open" : "NSE closed: informed-flow risk for LPs";
   const bal = s.user?.balances[a.assetId] ?? 0n;
 

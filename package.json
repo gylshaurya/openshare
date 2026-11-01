@@ -12,7 +12,10 @@
     "dev": "pnpm --filter @openshare/app dev",
     "build": "pnpm -r build",
     "test": "pnpm -r test",
-    "e2e": "tsx scripts/e2e.ts"
+    "e2e": "tsx scripts/e2e.ts",
+    "deploy:whitechain": "cd contracts && set -a && . ../.env && set +a && DEMO_PARAMS=true forge script script/Deploy.s.sol --rpc-url https://rpc.testnet.whitechain.io --broadcast --slow --verify --verifier blockscout --verifier-url https://explorer.testnet.whitechain.io/api/",
+    "seed:whitechain": "cd contracts && set -a && . ../.env && set +a && forge script script/Seed.s.sol --rpc-url https://rpc.testnet.whitechain.io --broadcast --slow",
+    "balance:whitechain": "set -a && . ./.env && set +a && cast balance $DEPLOYER_ADDRESS --rpc-url https://rpc.testnet.whitechain.io --ether"
   },
   "devDependencies": {
     "tsx": "4.23.15",

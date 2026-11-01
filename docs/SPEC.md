@@ -405,7 +405,7 @@ Params params; // §14
 - `beforeInitialize(sender, key, sqrtPrice)`: require that one currency is a listed OpenShare token (via `core.assetOfToken(token)`), the other is USDT, `key.fee == LPFeeLibrary.DYNAMIC_FEE_FLAG`, and `key.hooks == this`. Optionally `sender == owner`, so only the protocol creates pools.
 - `beforeSwap(...)`: look up the asset. If `compliance.transfersPaused(asset)`, revert `AssetPaused`. Fee: `oracle.isStale(asset) ? staleFee : (oracle.marketOpen() ? openFee : closedFee)`. Return `(selector, ZERO_DELTA, fee | LPFeeLibrary.OVERRIDE_FEE_FLAG)`.
 - Defaults: `openFee = 500` (0.05%), `closedFee = 3000` (0.30%), `staleFee = 10_000` (1.00%). Settable by the owner.
-- Deploy at a mined CREATE2 address whose low bits encode exactly these flags (HookMiner).
+- Deploy at a mined CREATE2 address whose low bits encode exactly these flags (mined in `Deploy.s.sol` against the CREATE2 proxy; `deployCodeTo` in tests). Implements `IHooks` directly; v4-periphery's BaseHook/HookMiner are not used (they moved out of periphery `main`).
 - No price cap logic (D-R1).
 
 ### 8.11 Events (complete list, the dashboard depends on them)
@@ -486,7 +486,7 @@ These are checked by `test/invariant/` (§17).
 
 ## 11. Frontend specification (`app/`, Next.js App Router)
 
-Stack: Next.js (App Router, TypeScript), wagmi v2 + viem, RainbowKit, TanStack Query, Tailwind CSS. Contract ABIs and addresses are generated into `app/src/generated/` from Foundry artifacts and `deployments/<chainId>.json`.
+Stack: Next.js 16 (App Router, TypeScript), wagmi 2 + viem, TanStack Query, Tailwind CSS 4. Wallets: any injected wallet, plus (local chain only) a **persona switcher** of wagmi `mock` connectors over anvil's unlocked accounts. RainbowKit/WalletConnect are deliberately not used. ABIs are generated into `packages/shared/src/abis.ts` (`pnpm gen`), and the deployment is served by `/api/deployment` from `deployments/<chainId>.json`.
 
 ### 11.1 Global
 - Header: wallet connect, the connected role badge (Minter, Broker, or none), the network guard (chain 1874 or local 31337), and the market status pill (Open, Closed, Extended closure, Halted).
@@ -778,3 +778,25 @@ NEXT_PUBLIC_RPC_URL=http://127.0.0.1:8545
 - **Session:** one exchange trading day.
 - **Extended closure:** a gap of more than one calendar day until the next session.
 - **Reserve:** USDT held by Core that backs tokens whose pledged shares were lost to a broker failure.
+
+---
+
+## 23. Implementation status (2026-11-01)
+
+| Phase | Status | Notes |
+|---|---|---|
+| 0 Scaffold | ✅ | pnpm workspace (`app`, `services/relay`, `packages/shared`), Foundry with OZ 5.4 + v4-core 4.0.0 |
+| 1 Registries, oracle, token, verifiers | ✅ | Plus `ReclaimPledgeVerifier`, tested against a real Reclaim-signed proof |
+| 2 Core + BondVault | ✅ | 71 contract tests: unit, the worked week (exact numbers), hook, Reclaim, and invariants I1–I6 (handler fuzzing) |
+| 3 v4 hook + pool | ✅ | Dynamic fee (open, closed, stale), pool guard, pause; swap and liquidity tested on a real PoolManager |
+| 4 Deployment | ✅ local / ⏳ testnet | `pnpm deploy:local` works. `pnpm deploy:whitechain` is ready but needs WBT in the deployer |
+| 5 Relay | ✅ | NSE 2026 calendar, Twelve Data / Alpha Vantage / Yahoo sources, FX median, CLI (`run`, `once`, `status`, `open`, `close`, `set-price`) |
+| 6 Web app | ✅ | All pages in §11 plus API routes. `pnpm build` passes. `scripts/e2e.ts` runs the §19 story through the API routes and contracts |
+| 7 Real integrations | ⏳ owner | World ID app + RP key, Kite Connect app + a 1-share margin pledge, Reclaim app + custom provider (see `docs/integrations/*`) |
+| 8 Stretch | ⏳ | zkFetch-proven price from a keyed market-data API (not the NSE website) |
+
+Deviations from earlier drafts, all reflected above:
+- Relay sources exclude NSE/Google scraping (§10.1).
+- The mock attestor accepts an explicit `pledgeRef` for re-proofs (demo only).
+- Seed gives demo actors gas on testnets.
+- The persona switcher replaces RainbowKit.

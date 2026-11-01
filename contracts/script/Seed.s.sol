@@ -60,13 +60,18 @@ contract Seed is Script {
         c.token = vm.parseJsonAddress(json, ".assets[0].token");
         require(vm.parseJsonBool(json, ".mockUsdt"), "Seed requires MockUSDT (fund actors manually otherwise)");
 
-        uint256 admin = key(0);
+        uint256 admin = vm.envOr("DEPLOYER_PRIVATE_KEY", key(0));
         address brokerX = vm.addr(key(5));
         address brokerY = vm.addr(key(6));
         address dev = vm.addr(key(8));
 
-        // 1. Admin: fund everyone with mock USDT; register attestor kinds.
+        // 1. Admin: fund everyone with gas (testnets) and mock USDT; register attestor kinds.
         vm.startBroadcast(admin);
+        uint256 gasTopUp = vm.envOr("DEMO_GAS_TOPUP_WEI", uint256(0.005 ether));
+        for (uint32 i = 1; i <= 10; ++i) {
+            address a = vm.addr(key(i));
+            if (a.balance < gasTopUp / 2) payable(a).transfer(gasTopUp);
+        }
         for (uint32 i = 5; i <= 10; ++i) {
             c.usdt.mint(vm.addr(key(i)), 250_000e6);
         }

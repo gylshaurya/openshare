@@ -18,7 +18,7 @@ import type { AssetView, Snapshot } from "@/lib/snapshot";
 
 function premium(a: AssetView) {
   if (a.poolPriceUsd6 === 0n || a.priceUsd6 === 0n) return undefined;
-  return (Number(a.poolPriceUsd6) / Number(a.priceUsd6) - 1) * 100;
+  return Math.round((Number(a.poolPriceUsd6) / Number(a.priceUsd6) - 1) * 10_000) / 100 || 0;
 }
 
 function AssetCard({ a, s }: { a: AssetView; s: Snapshot }) {
