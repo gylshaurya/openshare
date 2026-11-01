@@ -11,6 +11,13 @@
     "relay": "pnpm --filter @openshare/relay start",
     "dev": "pnpm --filter @openshare/app dev",
     "build": "pnpm -r build",
-    "test": "pnpm -r test"
+    "test": "pnpm -r test",
+    "e2e": "tsx scripts/e2e.ts"
+  },
+  "devDependencies": {
+    "tsx": "4.23.15",
+    "viem": "2.57.13",
+    "@openshare/shared": "workspace:*",
+    "@types/node": "26.6.6"
   }
 }
