@@ -8,3 +8,7 @@ cache/
 broadcast/*/31337/
 *.log
 .DS_Store
+contracts/out/
+contracts/cache/
+contracts/broadcast/
+deployments/31337.json
