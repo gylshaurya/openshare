@@ -42,6 +42,8 @@ contract Base is Test {
     uint256 internal nullifierCounter = 1;
     uint256 internal refCounter = 1;
     uint64 internal sessionCounter;
+    bytes32 internal attestedDomain;
+    bytes32 internal factsTypehash;
 
     function setUp() public virtual {
         vm.warp(1_780_000_000);
@@ -67,6 +69,16 @@ contract Base is Test {
         attested.setAttestor(vm.addr(MOCK_PK), Types.KIND_MOCK);
         attested.setAttestor(vm.addr(KITE_PK), Types.KIND_KITE);
         core.setVerifier(address(attested), true);
+        factsTypehash = attested.PLEDGE_FACTS_TYPEHASH();
+        attestedDomain = keccak256(
+            abi.encode(
+                keccak256("EIP712Domain(string name,string version,uint256 chainId,address verifyingContract)"),
+                keccak256("OpenSharePledgeAttestor"),
+                keccak256("1"),
+                block.chainid,
+                address(attested)
+            )
+        );
         roles.grantRole(roles.WORLD_ATTESTOR_ROLE(), vm.addr(WORLD_PK));
         oracle.grantRole(oracle.RELAYER_ROLE(), relayer);
         address t;
@@ -190,8 +202,27 @@ contract Base is Test {
         });
     }
 
+    /// @dev Local EIP-712 hash (no external call, so it never consumes a pending vm.prank).
+    function hashFactsLocal(PledgeFacts memory f) internal view returns (bytes32) {
+        bytes32 structHash = keccak256(
+            abi.encode(
+                factsTypehash,
+                f.pledgeRef,
+                f.assetId,
+                f.quantity,
+                f.pledgorIdHash,
+                f.pledgeeIdHash,
+                f.status,
+                f.observedAt,
+                f.wallet,
+                f.kind
+            )
+        );
+        return keccak256(abi.encodePacked("\x19\x01", attestedDomain, structHash));
+    }
+
     function sign(PledgeFacts memory f, uint256 pk) internal view returns (bytes memory) {
-        (uint8 v, bytes32 r, bytes32 s) = vm.sign(pk, attested.hashFacts(f));
+        (uint8 v, bytes32 r, bytes32 s) = vm.sign(pk, hashFactsLocal(f));
         return abi.encode(f, abi.encodePacked(r, s, v));
     }
 
