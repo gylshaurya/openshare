@@ -239,7 +239,7 @@ struct RoleAttestation { address wallet; uint8 role; uint256 nullifierHash; uint
 - `register(RoleAttestation att, bytes sig)`. Requires: `block.timestamp ≤ att.expiresAt`; signer has `WORLD_ATTESTOR_ROLE`; `att.wallet == msg.sender`; `nullifierRole[att.nullifierHash] == None`; `roleOf[att.wallet] == None`; `att.role ∈ {Minter, Broker}`. Effects: stores `nullifierRole`, `nullifierWallet`, `roleOf[wallet]`. Event: `RoleRegistered(wallet, role, nullifierHash)`.
 - Views: `roleOf(address) → Role`, `isMinter(address)`, `isBroker(address)`.
 - Admin `revoke(address)` (`DEFAULT_ADMIN_ROLE`) clears the wallet's role but **keeps the nullifier consumed**, so the human can't re-register under the other role.
-- **Off-chain attestor:** `/api/world/verify` verifies the IDKit proof for action `openshare-role` with `signal = wallet address (lowercase hex)`, then signs `RoleAttestation` with `WORLD_ATTESTOR_PRIVATE_KEY` (expiry 1 hour). Exact IDKit/verify API is in §10.3.
+- **Off-chain attestor:** `/api/world/verify` verifies the IDKit 4.x proof for action `openshare-role` with `signal = encodePacked(uint8 role, address wallet)` (role is bound into the proof), then signs `RoleAttestation` with `WORLD_ATTESTOR_PRIVATE_KEY` (expiry 1 hour). Exact API: `docs/integrations/world-id.md`.
 
 ### 8.4 ComplianceRegistry
 
@@ -457,8 +457,9 @@ These are checked by `test/invariant/` (§17).
 
 ### 10.3 World ID
 
-- Action `openshare-role`. Signal = the connected wallet address. Credential: Proof of Human (Orb). Staging app plus the simulator for development.
-- `POST /api/world/verify {proof payload, wallet, role}` verifies with the World Developer API (the exact endpoint and payload depend on the IDKit version; see `docs/integrations/world-id.md`). On success, it signs `RoleAttestation` (`WORLD_ATTESTOR_PRIVATE_KEY`). The contract enforces the uniqueness rules (§8.3).
+- IDKit 4.x, action `openshare-role`, preset `proofOfHuman({signal})` with `signal = encodePacked(uint8 role, address wallet)`, `allow_legacy_proofs = false`. RP signatures come from `POST /api/world/rp-signature`.
+- `POST /api/world/verify {idkitResponse, wallet, role}` checks environment, protocol 4.0, action, `issuer_schema_id == 1` and `signal_hash`, then forwards to `https://developer.world.org/api/v4/verify/{rp_id}`. On success, it signs `RoleAttestation` (`WORLD_ATTESTOR_PRIVATE_KEY`). The Portal doesn't reject reused nullifiers; the contract does (§8.3).
+- Demo fallback (DEMO_MODE only): a demo identity, labelled `DEMO IDENTITY`. Details: `docs/integrations/world-id.md`.
 
 ### 10.4 Reclaim zkTLS (pledge proofs)
 
@@ -706,10 +707,10 @@ WORLD_ATTESTOR_PRIVATE_KEY=
 KITE_ATTESTOR_PRIVATE_KEY=
 MOCK_ATTESTOR_PRIVATE_KEY=
 # world id
-NEXT_PUBLIC_WORLD_APP_ID=
-WORLD_ACTION=openshare-role
-WORLD_RP_ID=                       # if required by the IDKit version
-WORLD_RP_SIGNING_KEY=              # if required
+NEXT_PUBLIC_WORLD_APP_ID=          # app_...
+NEXT_PUBLIC_WORLD_RP_ID=           # rp_...
+NEXT_PUBLIC_WORLD_ENV=staging      # staging (simulator) | production
+WORLD_RP_SIGNING_KEY=              # server only
 # kite
 KITE_API_KEY=
 KITE_API_SECRET=
