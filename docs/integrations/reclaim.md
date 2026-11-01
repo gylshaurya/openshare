@@ -39,5 +39,5 @@ https://dev.reclaimprotocol.org/my-applications → `RECLAIM_APP_ID`, `RECLAIM_A
   - **Zerodha Console** (margin pledges): after SSO, `console.zerodha.com/api/reports/holdings/portfolio?date=…` (an async report; poll until `state == "SUCCESS"`).
   - **CDSL Easiest** (third-party pledges with pledgee + PSN; server-rendered, needs XPath).
 
-## Stretch: NSE price via zkFetch
-`client.zkFetch("https://www.nseindia.com/api/quote-equity?symbol=RELIANCE", {headers:{accept}}, {headers:{cookie}}, {responseMatches:[regex close], ...})`. NSE needs warm-up cookies and blocks cloud IPs, and its terms may forbid automated access. The result is best-effort and complements the relay.
+## Stretch: verifiable price via zkFetch
+Prove a quote from a market-data API whose terms allow automated access (e.g. Twelve Data with an API key, the key passed as a private param). Use `client.zkFetch(url, publicOpts, privateOpts{headers or query secrets}, {responseMatches, responseRedactions})`. Don't use the NSE website: it blocks automated clients, and circumventing that is out of bounds.

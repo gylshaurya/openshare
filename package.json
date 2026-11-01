@@ -1,0 +1,16 @@
+{
+  "name": "openshare",
+  "private": true,
+  "packageManager": "pnpm@10.34.5",
+  "scripts": {
+    "build:contracts": "cd contracts && forge build",
+    "test:contracts": "cd contracts && forge test",
+    "gen": "node scripts/gen-abis.mjs",
+    "chain": "anvil --port 8545 --block-time 1",
+    "deploy:local": "cd contracts && DEPLOYER_PRIVATE_KEY=0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80 DEMO_PARAMS=true forge script script/Deploy.s.sol --rpc-url http://127.0.0.1:8545 --broadcast && forge script script/Seed.s.sol --rpc-url http://127.0.0.1:8545 --broadcast",
+    "relay": "pnpm --filter @openshare/relay start",
+    "dev": "pnpm --filter @openshare/app dev",
+    "build": "pnpm -r build",
+    "test": "pnpm -r test"
+  }
+}

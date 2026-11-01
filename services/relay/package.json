@@ -1,0 +1,23 @@
+{
+  "name": "@openshare/relay",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "tsx src/cli.ts run",
+    "cli": "tsx src/cli.ts",
+    "build": "tsc --noEmit",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@openshare/shared": "workspace:*",
+    "dotenv": "17.4.2",
+    "viem": "2.57.13"
+  },
+  "devDependencies": {
+    "@types/node": "26.6.6",
+    "tsx": "4.23.15",
+    "typescript": "5.9.3",
+    "vitest": "5.0.5"
+  }
+}

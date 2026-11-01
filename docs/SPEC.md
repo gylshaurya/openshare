@@ -433,10 +433,11 @@ These are checked by `test/invariant/` (§17).
 
 ### 10.1 Relay (`services/relay`, Node 20, TypeScript, viem)
 
-- **Sources** (median of the available ones, at least 2 required, each within 1% of the median or excluded):
-  - Price: Yahoo Finance chart API (`RELIANCE.NS`), NSE quote API (cookie handshake), plus an optional third source.
+- **Sources** (median of the responding ones; values more than 1% from the median are excluded; at least `RELAY_MIN_SOURCES` must agree, default 1 for equities and 2 for FX):
+  - Price: Twelve Data (`TWELVEDATA_API_KEY`, NSE), Alpha Vantage (`ALPHAVANTAGE_API_KEY`, BSE cross-check), and the Yahoo chart API (no key, best effort).
   - USD/INR: Yahoo `INR=X`, Frankfurter (ECB), open.er-api.
-  - If fewer than 2 agree, don't post, and log a warning.
+  - **Only sources that permit programmatic access.** No browser impersonation, cookie warm-ups or page scraping (e.g. the NSE website).
+  - If too few sources agree, don't post, and log a warning.
 - **Calendar:** NSE regular session 09:15–15:30 IST, Mon–Fri, minus the holiday list in `services/relay/calendar/nse-holidays-2026.json` (and 2027).
 - **Loop:**
   - At session open, `setMarketOpen(true)`.
@@ -479,7 +480,7 @@ These are checked by `test/invariant/` (§17).
 
 ### 10.6 Stretch: Reclaim-proven NSE price
 
-`ReclaimPriceVerifier` accepts a Reclaim/zkFetch proof of the NSE quote endpoint for a symbol. It extracts `lastPrice` or `closePrice` and pushes it to the oracle with `source = Reclaim` if it's within `maxDeviationBps` of the relay price. It only complements the relay.
+`ReclaimPriceVerifier` accepts a Reclaim/zkFetch proof of a quote endpoint for a symbol. The endpoint must be one whose terms allow automated access (e.g. a keyed market-data API). Don't use the NSE website, which blocks automated clients. It extracts `lastPrice` or `closePrice` and pushes it to the oracle with `source = Reclaim` if it's within `maxDeviationBps` of the relay price. It only complements the relay.
 
 ---
 
@@ -718,6 +719,10 @@ KITE_API_SECRET=
 RECLAIM_APP_ID=
 RECLAIM_APP_SECRET=
 RECLAIM_PROVIDER_ID=
+# relay market data (optional keys; free tiers)
+TWELVEDATA_API_KEY=
+ALPHAVANTAGE_API_KEY=
+RELAY_MIN_SOURCES=1
 # app
 NEXT_PUBLIC_DEMO_MODE=true
 NEXT_PUBLIC_CHAIN_ID=31337
