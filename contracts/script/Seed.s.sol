@@ -61,19 +61,20 @@ contract Seed is Script {
         require(vm.parseJsonBool(json, ".mockUsdt"), "Seed requires MockUSDT (fund actors manually otherwise)");
 
         uint256 admin = vm.envOr("DEPLOYER_PRIVATE_KEY", key(0));
-        address brokerX = vm.addr(key(5));
         address brokerY = vm.addr(key(6));
         address dev = vm.addr(key(8));
 
         // 1. Admin: fund everyone with gas (testnets) and mock USDT; register attestor kinds.
         vm.startBroadcast(admin);
-        uint256 gasTopUp = vm.envOr("DEMO_GAS_TOPUP_WEI", uint256(0.005 ether));
+        // Top each actor up to a target balance (Whitechain gas is ~10 gwei; Dev's pledge + mint + LP ≈ 1.7M gas).
+        uint256 gasTarget = vm.envOr("DEMO_GAS_TARGET_WEI", uint256(0.01 ether));
         for (uint32 i = 1; i <= 10; ++i) {
             address a = vm.addr(key(i));
-            if (a.balance < gasTopUp / 2) payable(a).transfer(gasTopUp);
+            uint256 target = i == 1 ? gasTarget * 5 : i == 8 ? gasTarget * 3 : gasTarget; // relayer pushes prices all day
+            if (a.balance < target) payable(a).transfer(target - a.balance);
         }
         for (uint32 i = 5; i <= 10; ++i) {
-            c.usdt.mint(vm.addr(key(i)), 250_000e6);
+            if (c.usdt.balanceOf(vm.addr(key(i))) < 100_000e6) c.usdt.mint(vm.addr(key(i)), 250_000e6);
         }
         c.attested.setAttestor(vm.addr(key(3)), Types.KIND_MOCK);
         c.attested.setAttestor(vm.addr(key(4)), Types.KIND_KITE);
@@ -100,21 +101,15 @@ contract Seed is Script {
         _role(c, 7, Role.Minter);
         _role(c, 8, Role.Minter);
 
-        // 4. Brokers register and bond.
-        vm.startBroadcast(key(5));
-        c.core.registerBroker(keccak256("ZERODHA-MARGIN"), "Broker X (Zerodha margin stand-in)");
-        c.usdt.approve(address(c.vault), type(uint256).max);
-        c.vault.deposit(60_000e6);
-        c.usdt.approve(address(c.core), type(uint256).max);
-        vm.stopBroadcast();
-        vm.startBroadcast(key(6));
-        c.core.registerBroker(keccak256("1208160000000001"), "Broker Y (CDSL BO 1208160000000001)");
-        c.usdt.approve(address(c.vault), type(uint256).max);
-        c.vault.deposit(60_000e6);
-        c.usdt.approve(address(c.core), type(uint256).max);
-        vm.stopBroadcast();
+        // 4. Brokers register and bond (idempotent: skips steps already on-chain).
+        _broker(c, 5, keccak256("ZERODHA-MARGIN"), "Broker X (Zerodha margin stand-in)");
+        _broker(c, 6, keccak256("1208160000000001"), "Broker Y (CDSL BO 1208160000000001)");
 
         // 5. Dev (market maker): mock pledge of 1,000 RELIANCE to Y, accepted, mints 400, seeds the pool.
+        if (c.core.pledgesOf(dev).length > 0) {
+            console2.log("Dev already has a pledge; skipping step 5");
+            return;
+        }
         PledgeFacts memory f = PledgeFacts({
             pledgeRef: keccak256(abi.encodePacked("SEED-DEV-", block.timestamp)),
             assetId: c.asset,
@@ -128,7 +123,7 @@ contract Seed is Script {
         });
         bytes memory proof = _signFacts(c, f, key(3));
         vm.startBroadcast(key(8));
-        c.usdt.approve(address(c.core), type(uint256).max);
+        if (c.usdt.allowance(dev, address(c.core)) == 0) c.usdt.approve(address(c.core), type(uint256).max);
         uint256 pid = c.core.registerPledge(address(c.attested), proof, brokerY);
         vm.stopBroadcast();
         vm.broadcast(key(6));
@@ -151,8 +146,18 @@ contract Seed is Script {
         );
         vm.stopBroadcast();
 
-        brokerX;
         console2.log("Seeded. Dev pledge", pid);
+    }
+
+    function _broker(Ctx memory c, uint32 idx, bytes32 pledgee, string memory name) internal {
+        address who = vm.addr(key(idx));
+        (OpenShareCore.BrokerStatus st,,,) = c.core.getBroker(who);
+        vm.startBroadcast(key(idx));
+        if (st == OpenShareCore.BrokerStatus.None) c.core.registerBroker(pledgee, name);
+        if (c.usdt.allowance(who, address(c.vault)) == 0) c.usdt.approve(address(c.vault), type(uint256).max);
+        if (c.vault.bond(who) == 0) c.vault.deposit(60_000e6);
+        if (c.usdt.allowance(who, address(c.core)) == 0) c.usdt.approve(address(c.core), type(uint256).max);
+        vm.stopBroadcast();
     }
 
     function _role(Ctx memory c, uint32 idx, Role role) internal {
