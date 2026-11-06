@@ -8,7 +8,7 @@ export const dynamic = "force-dynamic";
 
 /**
  * Kite Connect callback: exchanges request_token, reads holdings, signs PledgeFacts for the margin pledge
- * (`collateral_quantity`), discards the access token, and redirects to /minter with the proof in the URL
+ * (`collateral_quantity`), discards the access token, and redirects to /mint with the proof in the URL
  * fragment (never sent to a server). Kind = TRUSTED ATTESTOR. docs/integrations/kite.md, SPEC D18.
  */
 export async function GET(req: Request) {
@@ -62,7 +62,7 @@ export async function GET(req: Request) {
   };
   const proof = await signPledgeFacts(signer, facts);
   // Access token is not stored anywhere.
-  const back = new URL("/minter", url.origin);
+  const back = new URL("/mint", url.origin);
   back.hash = `kite=${proof}&qty=${qty}&mode=${ctx.mode}`;
   return new Response(null, {
     status: 302,

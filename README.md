@@ -35,7 +35,7 @@ pnpm dev                   # terminal 2: app on http://localhost:3000
 pnpm e2e                   # optional: run the whole demo scenario headlessly
 ```
 
-On a local chain, the header has a **persona switcher** (Alice, Dev, Broker X, Broker Y, Bob, Carol, Admin) that uses anvil's unlocked accounts, so no wallet setup is needed. Demo controls (open or close sessions, advance sessions, set prices) live on **/ops**.
+The landing page is at `/`; the app lives at `/markets`, `/trade`, `/mint`, `/broker` and `/redeem`. On a local chain, **Connect wallet** lists anvil's unlocked accounts (Alice, Dev, Broker X, Broker Y, Bob, Carol, Admin), so no wallet setup is needed. Session controls (open or close sessions, advance sessions, set prices) live on **/ops**, which is not linked in the navigation. The visual system is documented in `app/DESIGN.md` and the product brief in `app/PRODUCT.md`.
 
 ## Tests
 
@@ -52,16 +52,17 @@ pnpm -r test               # shared + relay unit tests
 4. `cp app/.env.whitechain app/.env.local && pnpm dev`
 5. `cp services/relay/.env.whitechain services/relay/.env && pnpm relay`
 
-## Trust labels
+## How trust is presented
 
-Every trusted or mocked component is labelled in the UI:
+The UI is styled as a production product: it shows how each pledge was proven (zkTLS proof, Zerodha, or Attested) but no demo or mock badges. What is trusted or simulated on testnet:
 
-| Label | Meaning |
+| Component | Testnet reality |
 |---|---|
-| `zkTLS` | Reclaim proof |
-| `TRUSTED ATTESTOR` | Kite API attestor |
-| `MOCK` | demo proof |
-| `TRUSTED RELAY` / `MANUAL` | prices |
-| `DEMO IDENTITY` | World ID stand-in in demo mode |
+| Pledge proof "zkTLS proof" | Reclaim proof, verified on-chain |
+| Pledge proof "Zerodha" | Kite API read, signed by the OpenShare attestor key |
+| Pledge proof "Attested" | Details entered by the user, signed by the attestor key (no depository check) |
+| Prices | Signed relay (Yahoo / keyed APIs), or `/ops` overrides |
+| USDT | MockUSDT unless `USDT_ADDRESS` is set |
+| Local identity (`?identity=local` on a gated page) | Stand-in for World ID when `NEXT_PUBLIC_DEMO_MODE=true` |
 
 Testnet prototype. Not an offer of securities.

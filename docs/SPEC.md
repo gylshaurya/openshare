@@ -172,7 +172,7 @@ Each decision has an ID, used in code comments (`// D7`).
 ```
                  ┌───────────────────────────────── Web app (Next.js) ──────────────────────────────────┐
                  │ /            dashboard: supply vs pledged vs reserve, brokers, freshness, market, premium │
-                 │ /minter      World ID role → prove pledge (Reclaim | Kite | Mock) → mint / burn / release │
+                 │ /mint        World ID role → prove pledge (Reclaim | Kite | Mock) → mint / burn / release │
                  │ /broker      World ID role → register → bond → accept pledges → redemption queue → settle  │
                  │ /trade       swap asset/USDT on the v4 pool · add liquidity                               │
                  │ /redeem      request redemption · tickets · claim default                                 │
@@ -486,7 +486,7 @@ These are checked by `test/invariant/` (§17).
 
 ## 11. Frontend specification (`app/`, Next.js App Router)
 
-Stack: Next.js 16 (App Router, TypeScript), wagmi 2 + viem, TanStack Query, Tailwind CSS 4. Wallets: any injected wallet, plus (local chain only) a **persona switcher** of wagmi `mock` connectors over anvil's unlocked accounts. RainbowKit/WalletConnect are deliberately not used. ABIs are generated into `packages/shared/src/abis.ts` (`pnpm gen`), and the deployment is served by `/api/deployment` from `deployments/<chainId>.json`.
+Stack: Next.js 16 (App Router, TypeScript), wagmi 2 + viem, TanStack Query, Tailwind CSS 4. Wallets: any injected wallet, plus (local chain only) a list of wagmi `mock` connectors in the Connect wallet menu over anvil's unlocked accounts. RainbowKit/WalletConnect are deliberately not used. ABIs are generated into `packages/shared/src/abis.ts` (`pnpm gen`), and the deployment is served by `/api/deployment` from `deployments/<chainId>.json`.
 
 ### 11.1 Global
 - Header: wallet connect, the connected role badge (Minter, Broker, or none), the network guard (chain 1874 or local 31337), and the market status pill (Open, Closed, Extended closure, Halted).
@@ -504,7 +504,7 @@ Pledge table: ID, minter (short), broker, quantity, minted, pending, last re-pro
 
 Activity feed: the last 50 events.
 
-### 11.3 Minter `/minter`
+### 11.3 Minter `/mint`
 1. **Role step:** if there's no role, the IDKit widget → `/api/world/verify` → `register` tx.
 2. **Prove pledge:** choose the proof source (Reclaim, Kite or Mock, with badges). Pick the broker from a list (showing the pledgee ID hash match hint). Submit `registerPledge`.
 3. **My pledges:** status, quantity, minted, freshness, and actions: **Mint** (amount, fee preview, a "you are selling exposure; buying back may cost more" warning), **Burn**, **Release**, **Re-prove**, **Cancel** (if Proposed).
