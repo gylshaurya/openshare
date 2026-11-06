@@ -82,7 +82,7 @@ contract Base is Test {
         roles.grantRole(roles.WORLD_ATTESTOR_ROLE(), vm.addr(WORLD_PK));
         oracle.grantRole(oracle.RELAYER_ROLE(), relayer);
         address t;
-        (ASSET, t) = core.listAsset(ISIN, "oRELIANCE", "OpenShare Reliance Industries");
+        (ASSET, t) = core.listAsset(ISIN, "oRELIANCE", "Bull Street Reliance Industries");
         token = OpenShareToken(t);
         vm.stopPrank();
 

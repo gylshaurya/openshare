@@ -50,7 +50,7 @@ function WeekStrip() {
               />
             ))}
           </div>
-          <span className="text-[13px] font-medium text-on-dark">OpenShare</span>
+          <span className="text-[13px] font-medium text-on-dark">Bull Street</span>
           <div className="h-3 rounded-full bg-accent-dark" />
         </div>
         <div className="pointer-events-none absolute inset-y-[-6px] left-[104px] right-0">
@@ -68,7 +68,7 @@ function WeekStrip() {
         </div>
       </div>
       <p className="mt-4 text-[13px] text-on-dark-soft">
-        NSE trades <span className="num text-on-dark">{(openShare * 100).toFixed(0)}%</span> of this week. OpenShare markets stay open the rest of the time.
+        NSE trades <span className="num text-on-dark">{(openShare * 100).toFixed(0)}%</span> of this week. Bull Street markets stay open the rest of the time.
       </p>
     </figure>
   );
@@ -135,7 +135,7 @@ function PremiumDark({ pct }: { pct?: number }) {
 const STEPS = [
   {
     title: "Pledge from your demat",
-    body: "Create a pledge to a bonded OpenShare broker at your depository. Your shares never leave your account; the pledge locks them.",
+    body: "Create a pledge to a bonded Bull Street broker at your depository. Your shares never leave your account; the pledge locks them.",
     detail: "100 RELIANCE pledged",
   },
   {
@@ -357,7 +357,7 @@ export default function Landing() {
         </div>
         <div className="border-t border-line">
           <p className="mx-auto max-w-[1200px] px-4 py-5 text-[12.5px] text-muted sm:px-6">
-            © {new Date().getFullYear()} OpenShare. Testnet. Not an offer of securities. Token prices are set by traders and can differ
+            © {new Date().getFullYear()} Bull Street. Testnet. Not an offer of securities. Token prices are set by traders and can differ
             from NSE prices.
           </p>
         </div>

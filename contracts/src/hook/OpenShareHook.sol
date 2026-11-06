@@ -18,8 +18,8 @@ interface ICoreAssetLookup {
 }
 
 /// @title OpenShareHook
-/// @notice Uniswap v4 hook for OpenShare asset/USDT pools. SPEC §8.10 (D19).
-///         - Pool guard: only listed OpenShare tokens paired with USDT, dynamic-fee pools, created by the owner.
+/// @notice Uniswap v4 hook for Bull Street asset/USDT pools. SPEC §8.10 (D19).
+///         - Pool guard: only listed Bull Street tokens paired with USDT, dynamic-fee pools, created by the owner.
 ///         - Dynamic fee: openFee while the exchange is open, closedFee while closed, staleFee if the oracle is stale.
 ///         - Reverts swaps while the asset's transfers are paused.
 ///         No price caps (D3 / D-R1). Holder compliance is enforced by the token itself (D16).
@@ -103,7 +103,7 @@ contract OpenShareHook is IHooks {
 
     // ------------------------------------------------------------------ views
 
-    /// @notice The asset (OpenShare token) side of a pool key, or bytes32(0) if the pool is not an OpenShare pool.
+    /// @notice The asset (Bull Street token) side of a pool key, or bytes32(0) if the pool is not a Bull Street pool.
     function assetOf(PoolKey calldata key) public view returns (bytes32 assetId) {
         address c0 = Currency.unwrap(key.currency0);
         address c1 = Currency.unwrap(key.currency1);

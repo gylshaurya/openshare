@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-/** OpenShare mark: a share (left) fully matched by its pledge (right). */
+/** Bull Street mark: a share (left) fully matched by its pledge (right). */
 export function Mark({ size = 26, dark = false }: { size?: number; dark?: boolean }) {
   return (
     <svg width={size} height={size} viewBox="0 0 28 28" aria-hidden>
@@ -13,9 +13,9 @@ export function Mark({ size = 26, dark = false }: { size?: number; dark?: boolea
 
 export function Wordmark({ href = "/", dark = false }: { href?: string; dark?: boolean }) {
   return (
-    <Link href={href} className={`flex items-center gap-2.5 ${dark ? "text-on-dark" : "text-ink"}`} aria-label="OpenShare home">
+    <Link href={href} className={`flex items-center gap-2.5 ${dark ? "text-on-dark" : "text-ink"}`} aria-label="Bull Street home">
       <Mark dark={dark} />
-      <span className="text-[17px] font-semibold tracking-[-0.02em]">OpenShare</span>
+      <span className="text-[17px] font-semibold tracking-[-0.02em]">Bull Street</span>
     </Link>
   );
 }

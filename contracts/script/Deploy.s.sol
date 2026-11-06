@@ -28,7 +28,7 @@ import {IPriceOracle} from "../src/interfaces/IPriceOracle.sol";
 import {MockUSDT} from "../src/mocks/MockUSDT.sol";
 import {Types} from "../src/libraries/Types.sol";
 
-/// @notice Deploys the full OpenShare stack (protocol + Uniswap v4 + hook + pools) and writes
+/// @notice Deploys the full Bull Street stack (protocol + Uniswap v4 + hook + pools) and writes
 ///         ../deployments/<chainId>.json. SPEC §16 Phase 4.
 /// Env:
 ///   DEPLOYER_PRIVATE_KEY (required)
@@ -170,9 +170,9 @@ contract Deploy is Script {
 
     function _listings() internal pure returns (Listing[] memory l) {
         l = new Listing[](3);
-        l[0] = Listing("INE002A01018", "oRELIANCE", "OpenShare Reliance Industries", 140_000);
-        l[1] = Listing("INE467B01029", "oTCS", "OpenShare Tata Consultancy Services", 315_000);
-        l[2] = Listing("INE009A01021", "oINFY", "OpenShare Infosys", 150_000);
+        l[0] = Listing("INE002A01018", "oRELIANCE", "Bull Street Reliance Industries", 140_000);
+        l[1] = Listing("INE467B01029", "oTCS", "Bull Street Tata Consultancy Services", 315_000);
+        l[2] = Listing("INE009A01021", "oINFY", "Bull Street Infosys", 150_000);
     }
 
     function _usd6(uint256 inrPaise) internal pure returns (uint256) {

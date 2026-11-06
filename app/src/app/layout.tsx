@@ -8,7 +8,7 @@ const geist = Geist({ subsets: ["latin"], variable: "--font-geist" });
 const geistMono = Geist_Mono({ subsets: ["latin"], variable: "--font-geist-mono" });
 
 export const metadata: Metadata = {
-  title: "OpenShare: Indian equities, on-chain and always open",
+  title: "Bull Street: Indian equities, on-chain and always open",
   description:
     "Mint a token for every share you pledge from your own demat account. Trade 24/7. Redeem for USDT through bonded brokers.",
 };

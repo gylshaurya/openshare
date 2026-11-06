@@ -3,7 +3,7 @@ import { clients, readOracleAsset } from "./chain";
 import { closeSession, fetchMarket, pushPrices, runLoop, setMarketOpen } from "./relay";
 
 /**
- * OpenShare price relay CLI (SPEC §10.1).
+ * Bull Street price relay CLI (SPEC §10.1).
  *   run                         loop: open/push/close following the NSE calendar
  *   once                        fetch live prices from public sources and push once
  *   status                      print on-chain oracle state

@@ -303,7 +303,7 @@ export function ProofLabel({ kind }: { kind: number }) {
     kind === 1
       ? "Proven with a Reclaim zkTLS proof of the depository record"
       : kind === 2
-        ? "Read from the Zerodha Kite API and signed by the OpenShare attestor"
+        ? "Read from the Zerodha Kite API and signed by the Bull Street attestor"
         : "Pledge details signed by an approved attestor";
   return (
     <span title={title} className="inline-flex items-center gap-1.5 text-[13px] text-body">

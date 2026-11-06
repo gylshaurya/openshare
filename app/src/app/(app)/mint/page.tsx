@@ -155,7 +155,7 @@ function AddPledge() {
         )}
         {source === "kite" && (
           <Note>
-            Sign in with Zerodha. OpenShare reads your pledged {ticker(asset.isin)} quantity from Kite, signs the result and discards
+            Sign in with Zerodha. Bull Street reads your pledged {ticker(asset.isin)} quantity from Kite, signs the result and discards
             the session.
             {kiteProof && <span className="mt-2 block font-medium text-up">Verified: {kiteProof.qty} pledged shares. Submit to continue.</span>}
           </Note>

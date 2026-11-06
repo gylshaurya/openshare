@@ -111,7 +111,7 @@ export function RoleGate({ role, children }: { role: number; children: ReactNode
   return (
     <GateShell icon={<Fingerprint className="size-5" />} title={`Verify to become a ${roleName}`}>
       <p>
-        OpenShare uses World ID to confirm you are a unique person. One person can hold one role, which keeps minters and
+        Bull Street uses World ID to confirm you are a unique person. One person can hold one role, which keeps minters and
         the brokers who hold their pledges independent. Only an anonymous identifier is stored on-chain.
       </p>
       <div className="mt-6 flex flex-col items-center gap-3">
@@ -145,7 +145,7 @@ export function RoleGate({ role, children }: { role: number; children: ReactNode
             onSuccess={() => {
               if (signedRef.current) void register(signedRef.current);
             }}
-            onError={(code) => setErr(code === "max_verifications_reached" ? "This person already holds an OpenShare role." : `Verification failed (${code}).`)}
+            onError={(code) => setErr(code === "max_verifications_reached" ? "This person already holds a Bull Street role." : `Verification failed (${code}).`)}
           />
         )}
         {localIdentity && (

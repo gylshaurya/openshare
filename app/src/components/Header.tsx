@@ -203,7 +203,7 @@ export function AppFooter() {
   return (
     <footer className="border-t border-line">
       <div className="mx-auto flex max-w-[1200px] flex-wrap items-center justify-between gap-3 px-4 py-6 text-[12.5px] text-muted sm:px-6">
-        <span>© {new Date().getFullYear()} OpenShare. Testnet. Not an offer of securities.</span>
+        <span>© {new Date().getFullYear()} Bull Street. Testnet. Not an offer of securities.</span>
         <span>Every token is backed by a pledged share or the bond-funded reserve, enforced on-chain.</span>
       </div>
     </footer>

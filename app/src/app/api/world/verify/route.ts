@@ -48,7 +48,7 @@ export async function POST(req: Request) {
     functionName: "nullifierRole",
     args: [nullifier],
   })) as number;
-  if (existing !== 0) return json({ error: "This human already holds an OpenShare role" }, 409);
+  if (existing !== 0) return json({ error: "This human already holds a Bull Street role" }, 409);
 
   return json(await signRole(signer, wallet, role, nullifier));
 }

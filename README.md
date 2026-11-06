@@ -1,4 +1,4 @@
-# OpenShare
+# Bull Street
 
 **Mint tokenized stock against your own pledged shares. Bonded brokers guarantee redemption.**
 
@@ -59,7 +59,7 @@ The UI is styled as a production product: it shows how each pledge was proven (z
 | Component | Testnet reality |
 |---|---|
 | Pledge proof "zkTLS proof" | Reclaim proof, verified on-chain |
-| Pledge proof "Zerodha" | Kite API read, signed by the OpenShare attestor key |
+| Pledge proof "Zerodha" | Kite API read, signed by the Bull Street attestor key |
 | Pledge proof "Attested" | Details entered by the user, signed by the attestor key (no depository check) |
 | Prices | Signed relay (Yahoo / keyed APIs), or `/ops` overrides |
 | USDT | MockUSDT unless `USDT_ADDRESS` is set |

@@ -13,11 +13,11 @@ Researched and checked live on 2026-11-01.
 | Faucet | https://faucet.testnet.whitechain.io: **WBT only**, 0.5 WBT per 24 h, GitHub login (account ≥ 30 days) + captcha |
 | CREATE2 proxy | `0x4e59b44847b379578588920cA78FbF26c0B4956C`: present |
 | Permit2 | `0x000000000022D473030F116dDEE9F6B43aC78BA3`: present |
-| Uniswap v4 | **Not deployed.** OpenShare deploys its own PoolManager plus test routers (`script/DeployUniswap.s.sol`) |
+| Uniswap v4 | **Not deployed.** Bull Street deploys its own PoolManager plus test routers (`script/DeployUniswap.s.sol`) |
 | Test USDT | `0xcedfB56113143d55b2358b8CFbB0dEB5Ad2f55a7`: "Tether USD", 6 decimals, EIP-2612 permit + EIP-3009. **Mint is `onlyOwner`; the faucet does not dispense it.** |
 | Docs token list USDT | `0xaa7962d073935D387e8d442DA1D7149C81388f46` (symbol `USDT.e`) |
 
-## Consequences for OpenShare
+## Consequences for Bull Street
 - `USDT_ADDRESS` is configurable. If it's empty, the deploy script deploys `MockUSDT` (open mint, labelled "mock USDT" in the UI).
 - To use the real test USDT, the team must obtain a balance from the token owner or from the Whitechain team, then distribute it to demo actors.
 - Gas estimate for the full deploy (protocol + v4 + pool + seed): about 0.15–0.25 WBT. That's one or two faucet claims.

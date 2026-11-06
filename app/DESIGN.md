@@ -1,6 +1,6 @@
-# OpenShare design system
+# Bull Street design system
 
-Based loosely on an institutional-exchange reference: quiet white canvas, one accent, calm display weights, tabular numbers, and pill controls. OpenShare has its own accent and type, so it never reads as a copy of the reference brand.
+Based loosely on an institutional-exchange reference: quiet white canvas, one accent, calm display weights, tabular numbers, and pill controls. Bull Street has its own accent and type, so it never reads as a copy of the reference brand.
 
 ## World
 

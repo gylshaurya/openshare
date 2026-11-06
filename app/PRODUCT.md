@@ -19,7 +19,7 @@ Admins and operators run a separate operations console that isn't in the main na
 
 ## Product Purpose
 
-OpenShare turns depository pledges into on-chain stock tokens. Shares never leave the shareholder's demat account. A pledge locks them to a bonded broker, and the contracts enforce, per stock: tokens in existence ≤ shares still pledged + bond-funded reserve. Success means a buyer can trust a token is backed and redeemable, and a shareholder can unlock liquidity in minutes.
+Bull Street turns depository pledges into on-chain stock tokens. Shares never leave the shareholder's demat account. A pledge locks them to a bonded broker, and the contracts enforce, per stock: tokens in existence ≤ shares still pledged + bond-funded reserve. Success means a buyer can trust a token is backed and redeemable, and a shareholder can unlock liquidity in minutes.
 
 ## Positioning
 
@@ -40,7 +40,7 @@ Backing is enforced by contract against pledges proven from the depository side 
 
 ## Brand Commitments
 
-- Name: OpenShare. Token symbols: `o` + NSE ticker (oRELIANCE, oTCS, oINFY).
+- Name: Bull Street. Token symbols: `o` + NSE ticker (oRELIANCE, oTCS, oINFY).
 - Visual reference supplied by the user: an institutional crypto-exchange design analysis (`../../DESIGN-coinbase.md`), to be used loosely and never copied as Coinbase branding.
 - Legal footer: "Testnet. Not an offer of securities."
 

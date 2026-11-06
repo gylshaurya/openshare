@@ -1,7 +1,7 @@
-# OpenShare: Product Specification and Implementation Plan
+# Bull Street: Product Specification and Implementation Plan
 
-> **Status:** v1.0 · living document. This is the single source of truth for what OpenShare is, every design decision made so far, and how to build it.
-> **Audience:** engineers and coding agents. An agent should be able to implement OpenShare end to end from this document alone. If code and this spec disagree, fix one of them in the same change, and record why in §6 (Decision log).
+> **Status:** v1.0 · living document. This is the single source of truth for what Bull Street is, every design decision made so far, and how to build it.
+> **Audience:** engineers and coding agents. An agent should be able to implement Bull Street end to end from this document alone. If code and this spec disagree, fix one of them in the same change, and record why in §6 (Decision log).
 
 ---
 
@@ -20,7 +20,7 @@
 
 ## 1. Product overview
 
-**OpenShare lets anyone who owns real shares mint tokenized stock against them, without handing the shares to a custodian.**
+**Bull Street lets anyone who owns real shares mint tokenized stock against them, without handing the shares to a custodian.**
 
 - A shareholder (the **minter**) keeps the shares in their own demat (brokerage depository) account and locks them with a **depository pledge** in favour of an independent, bonded **pledge broker**.
 - The minter proves the pledge on-chain with a **zkTLS proof** of their depository/broker statement, then mints the same number of tokens. They can sell those tokens 24/7, at whatever price the market pays.
@@ -305,7 +305,7 @@ Core keeps `allowedVerifier[address] → bool`. A pledge records which verifier 
 - `ERC20(name, symbol)`, 18 decimals. Constructor `(name, symbol, assetId, core, compliance)`.
 - `mint(to, amount)` and `burn(from, amount)`: `onlyCore`.
 - `_update(from, to, value)` override: if not (Core minting or burning), `require(compliance.canTransfer(assetId, from, to))`. Mint and burn by Core still check that the recipient isn't blocked (a blocked holder can't receive a mint).
-- Naming: symbol `o` + ticker (e.g. `oRELIANCE`), name `OpenShare <Company>`.
+- Naming: symbol `o` + ticker (e.g. `oRELIANCE`), name `Bull Street <Company>`.
 
 ### 8.8 BondVault
 
@@ -402,7 +402,7 @@ Params params; // §14
 ### 8.10 OpenShareHook (Uniswap v4)
 
 - Permissions: `beforeInitialize`, `beforeSwap`. All others false.
-- `beforeInitialize(sender, key, sqrtPrice)`: require that one currency is a listed OpenShare token (via `core.assetOfToken(token)`), the other is USDT, `key.fee == LPFeeLibrary.DYNAMIC_FEE_FLAG`, and `key.hooks == this`. Optionally `sender == owner`, so only the protocol creates pools.
+- `beforeInitialize(sender, key, sqrtPrice)`: require that one currency is a listed Bull Street token (via `core.assetOfToken(token)`), the other is USDT, `key.fee == LPFeeLibrary.DYNAMIC_FEE_FLAG`, and `key.hooks == this`. Optionally `sender == owner`, so only the protocol creates pools.
 - `beforeSwap(...)`: look up the asset. If `compliance.transfersPaused(asset)`, revert `AssetPaused`. Fee: `oracle.isStale(asset) ? staleFee : (oracle.marketOpen() ? openFee : closedFee)`. Return `(selector, ZERO_DELTA, fee | LPFeeLibrary.OVERRIDE_FEE_FLAG)`.
 - Defaults: `openFee = 500` (0.05%), `closedFee = 3000` (0.30%), `staleFee = 10_000` (1.00%). Settable by the owner.
 - Deploy at a mined CREATE2 address whose low bits encode exactly these flags (mined in `Deploy.s.sol` against the CREATE2 proxy; `deployCodeTo` in tests). Implements `IHooks` directly; v4-periphery's BaseHook/HookMiner are not used (they moved out of periphery `main`).

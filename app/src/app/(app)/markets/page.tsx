@@ -46,7 +46,7 @@ function RuleBanner({ s }: { s: Snapshot }) {
 
 function MarketsTable({ s }: { s: Snapshot }) {
   return (
-    <Panel title="Markets" description="Token prices on the OpenShare pool against the latest NSE price" flush>
+    <Panel title="Markets" description="Token prices on the Bull Street pool against the latest NSE price" flush>
       <table>
         <thead>
           <tr>

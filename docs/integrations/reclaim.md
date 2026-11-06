@@ -5,7 +5,7 @@ Researched 2026-11-01. Implements SPEC D18, §10.4–10.6.
 ## Packages
 - `@reclaimprotocol/js-sdk` 5.8.3: proof requests (server init, browser flow) and `transformForOnchain`.
 - `@reclaimprotocol/zk-fetch` 1.1.0: server-side proofs of HTTP APIs (used for the NSE price, the stretch goal).
-- On-chain: OpenShare's own `ReclaimPledgeVerifier`, an allowlist verifier. Reclaim isn't deployed on chain 1874, and the official `Reclaim.sol` uses an exact `0.8.4` pragma plus epoch-based witness selection.
+- On-chain: Bull Street's own `ReclaimPledgeVerifier`, an allowlist verifier. Reclaim isn't deployed on chain 1874, and the official `Reclaim.sol` uses an exact `0.8.4` pragma plus epoch-based witness selection.
 
 ## Credentials (owner action)
 https://dev.reclaimprotocol.org/my-applications → `RECLAIM_APP_ID`, `RECLAIM_APP_SECRET` (shown once). The provider ID comes from the custom provider you create (below).

@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.26;
 
-/// @notice Shared types for OpenShare. See docs/SPEC.md §8.
+/// @notice Shared types for Bull Street. See docs/SPEC.md §8.
 library Types {
     /// 1 share = 1e18 token units.
     uint256 internal constant SHARE = 1e18;
